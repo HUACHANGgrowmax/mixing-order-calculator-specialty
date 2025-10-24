@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadingDiv.style.background = 'rgba(0,0,0,0.8)';
   loadingDiv.style.color = 'white';
   document.body.appendChild(loadingDiv);
-
   async function loadSheet(url) {
     return new Promise((resolve, reject) => {
       Papa.parse(url, {
@@ -21,7 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     });
   }
-
   async function loadData() {
     try {
       const [
@@ -35,7 +33,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadSheet('https://docs.google.com/spreadsheets/d/e/2PACX-1vQEAqN-7MmZwiGfM9rRuU3g4IyShCgac4ABlKs2AzwtAVKdg3uAGfKIWrpiuTSvzq32hc20Bhxev7Qf/pub?gid=1857741276&single=true&output=csv'),
         loadSheet('https://docs.google.com/spreadsheets/d/e/2PACX-1vQEAqN-7MmZwiGfM9rRuU3g4IyShCgac4ABlKs2AzwtAVKdg3uAGfKIWrpiuTSvzq32hc20Bhxev7Qf/pub?gid=376296893&single=true&output=csv')
       ]);
-
       window.nutrientContributionsAsahi = nutrientAsahi.reduce((acc, row) => {
         if (row.Material) {
           acc[row.Material] = {
@@ -47,21 +44,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         return acc;
       }, {});
-
       window.materialPriority = materialPriority
         .filter(row => row.Name)
         .map(row => ({
           name: row.Name,
           divisibleBy: parseInt(row.DivisibleBy) || 25
         }));
-
       window.asahiPrices = asahiPrices.reduce((acc, row) => {
         if (row.Material) {
           acc[row.Material] = parseFloat(row.Price) || 0;
         }
         return acc;
       }, {});
-
       window.items = {};
       window.materialPrices = {};
       itemsCombined.forEach(row => {
@@ -100,7 +94,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw error;
     }
   }
-
   try {
     const timeoutPromise = new Promise((_, reject) => {
       setTimeout(() => reject(new Error('Data loading timed out')), 30000);
@@ -120,13 +113,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       loadingDiv.remove();
     }
   }
-
   $('#itemName').select2({
     placeholder: "-- Select an item --",
     allowClear: true,
     width: '100%'
   });
-
   const itemName = document.getElementById("itemName");
   const bagCostField = document.getElementById("bagCost");
   const materialCostField = document.getElementById("materialCost");
@@ -159,7 +150,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     return { N: 0, P2O5: 0, K2O: 0, MgO: 0, total: 0 };
   }
-
   function populateItemDropdown() {
     const sortedItems = Object.keys(items)
       .filter(item => !item.match(/\((A|B|C|D)\)$/))
@@ -169,7 +159,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     ).join("");
     itemName.innerHTML = `<option value="" disabled selected>--Select an item--</option>${options}`;
   }
-
   function addMaterialRow(material = "", ratio = "0") {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -204,7 +193,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       recalculateCosts();
       recalculateNutrients();
     });
-
     const rangeInput = row.querySelector(".input-ratio");
     const numberInput = row.querySelector(".ratio-value");
     rangeInput.addEventListener("input", () => {
@@ -226,12 +214,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       recalculateCosts();
       recalculateNutrients();
     });
-
     const unitPriceInput = row.querySelector(".unit-price");
     unitPriceInput.addEventListener("input", () => {
       recalculateCosts();
     });
-
     row.querySelector(".remove-btn").addEventListener("click", () => {
       row.remove();
       materialRows = materialRows.filter(r => r !== row);
@@ -239,13 +225,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       recalculateNutrients();
     });
   }
-
   function updateMaterialPrice(row, material) {
     const isAsahi = mixingLocation.value === "ASAHI";
     const price = isAsahi && asahiPrices[material] !== undefined ? asahiPrices[material] : materialPrices[material] !== undefined ? materialPrices[material] : 0;
     row.querySelector(".unit-price").value = price.toFixed(2);
   }
-
   function updateAllMaterialPrices() {
     materialRows.forEach(row => {
       const materialSelect = $(row).find(".material-select");
@@ -257,12 +241,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     recalculateCosts();
     recalculateNutrients();
   }
-
   function recalculateNutrients() {
     const contributions = nutrientContributionsAsahi;
     let calculated = { N: 0, P2O5: 0, K2O: 0, MgO: 0 };
     let totalInput = 0;
-
     materialRows.forEach(row => {
       const material = row.querySelector(".material-select").value;
       const ratio = parseFloat(row.querySelector(".input-ratio").value) || 0;
@@ -275,10 +257,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         calculated.MgO += factor * (contributions[material].MgO || 0);
       }
     });
-
     const total = calculated.N + calculated.P2O5 + calculated.K2O + calculated.MgO;
     const expectedValues = parseNutrientValues(itemName.value) || { N: 0, P2O5: 0, K2O: 0, MgO: 0, total: 0 };
-
     document.getElementById("expectedN").textContent = expectedValues.N.toFixed(1) || "0.0";
     document.getElementById("calculatedN").textContent = calculated.N.toFixed(1);
     document.getElementById("expectedP2O5").textContent = expectedValues.P2O5.toFixed(1) || "0.0";
@@ -289,7 +269,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById("calculatedMgO").textContent = calculated.MgO.toFixed(1);
     document.getElementById("expectedTotal").textContent = expectedValues.total.toFixed(1) || "0.0";
     document.getElementById("calculatedTotal").textContent = total.toFixed(1);
-
     const rows = document.querySelectorAll("#nutrientTable tbody tr");
     rows.forEach(row => {
       const nutrient = row.querySelector(".nutrient-name").textContent;
@@ -307,7 +286,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
   }
-
   function recalculateCosts() {
     let totalMaterialCost = 0;
     let totalInput = 0;
@@ -319,13 +297,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       totalMaterialCost += cost;
       totalInput += ratio;
     });
-
     totalRatio.textContent = totalInput.toFixed(0);
     totalRatio.style.color = totalInput === 995 ? "green" : "red";
     materialCostField.value = totalMaterialCost.toFixed(2);
     updateTotals();
   }
-
   function updateTotals() {
     const material = parseFloat(materialCostField.value) || 0;
     const mixing = parseFloat(mixingCostField.value) || 0;
@@ -346,7 +322,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       gpMarginField.value = "";
     }
   }
-
   async function initializeApp() {
     try {
       await loadData();
@@ -355,21 +330,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         alert('No items loaded. Please check the Google Sheet data.');
         return;
       }
-
       if (typeof materialPrices === 'undefined' || typeof items === 'undefined' || 
           typeof nutrientContributionsAsahi === 'undefined') {
         console.error('Error: Data is not loaded or contains invalid data. Please ensure all required data is fetched correctly.');
         alert('Data loading error. Please check if the Google Sheets data is correctly formatted.');
         return;
       }
-
       if (!mixingLocation.querySelector('option[value="INNO"]')) {
         const innoOption = document.createElement('option');
         innoOption.value = 'INNO';
         innoOption.textContent = 'INNO';
         mixingLocation.appendChild(innoOption);
       }
-
       populateItemDropdown();
       $('#itemName').on('select2:select', () => {
         const selectedValue = itemName.value;
@@ -408,7 +380,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         totalRatio.style.color = "red";
         recalculateCosts();
       });
-
       addBtn.addEventListener("click", () => addMaterialRow());
       mixingLocation.addEventListener("change", () => {
         const val = mixingLocation.value;
@@ -422,13 +393,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         recalculateNutrients();
         updateTotals();
       });
-
       document.getElementById("delivery").addEventListener("change", () => {
         const val = document.getElementById("delivery").value;
         transportOutField.value = val === "Deld" ? "70.00" : "0.00";
         updateTotals();
       });
-
       [sellingPriceInput, tonnageInput, commissionInput].forEach(el => {
         el.addEventListener("input", updateTotals);
       });
@@ -439,7 +408,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             alert('Data error: Please ensure materialPriority is defined in the Google Sheet.');
             return;
           }
-
           const contributions = nutrientContributionsAsahi;
           const nutrients = ['N', 'P2O5', 'K2O', 'MgO'];
           const n = materialRows.length;
@@ -447,12 +415,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             alert("Please add at least one material to solve.");
             return;
           }
-
           if (!itemName.value) {
             alert("Please select an item to solve for nutrient targets.");
             return;
           }
-
           const materials = materialRows.map(row => row.querySelector(".material-select").value);
           const sortedMaterials = materials
             .map((mat, idx) => ({ mat, idx }))
@@ -461,7 +427,6 @@ document.addEventListener('DOMContentLoaded', async () => {
               const bPriority = materialPriority.findIndex(p => p.name === b.mat) !== -1 ? materialPriority.findIndex(p => p.name === b.mat) : materialPriority.length;
               return aPriority - bPriority;
             });
-
           const A = nutrients.map(nut => sortedMaterials.map(m => contributions[m.mat]?.[nut] || 0));
           const exp = nutrients.map(nut => parseFloat(document.getElementById(`expected${nut === 'P2O5' ? 'P2O5' : nut}`).textContent) || 0);
 
@@ -469,7 +434,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             alert("Invalid expected nutrient values. Please check the selected item.");
             return;
           }
-
           const AT = A[0].map((_, col) => A.map(row => row[col]));
           const ATA = AT.map(row => row.map((_, col) => row.reduce((acc, val, i) => acc + val * A[i][col], 0)));
           const S = Array.from({ length: n + 1 }, () => Array(n + 1).fill(0));
@@ -481,7 +445,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             S[n][i] = 1;
           }
           S[n][n] = 0;
-
           const ATexp = AT.map(row => row.reduce((acc, val, i) => acc + val * exp[i], 0));
           const b = ATexp.concat(1);
           const f = solveSystem(S, b).slice(0, n);
@@ -519,13 +482,11 @@ document.addEventListener('DOMContentLoaded', async () => {
               return r > 0 ? r + extraPerMaterial : r;
             });
           }
-
           let total = adjustedRatios.reduce((a, b) => a + b, 0);
           if (Math.abs(total - 1000) > 0.01) {
             const factor = 1000 / total;
             adjustedRatios = adjustedRatios.map(v => v * factor);
           }
-
           let rounded = adjustedRatios.map((v, i) => {
             const mat = sortedMaterials[i].mat;
             const priority = materialPriority.find(p => p.name === mat) || { divisibleBy: 25 };
@@ -597,8 +558,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       alert('Error initializing app. Please check the Google Sheets data and try again.');
     }
   }
-
   // Start the app
   initializeApp();
 
 });
+
