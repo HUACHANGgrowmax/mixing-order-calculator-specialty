@@ -11,21 +11,17 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <h2>Mixing Order Calculator (Specialty)</h2>
-
 <div class="form-row">
   <label for="itemName">Item Name</label>
   <select id="itemName" style="width: 100%">
     <option value="" disabled selected>--Select an item--</option>
   </select>
 </div>
-
 <div class="form-row">
   <label for="tonnage">Tonnage (RM)</label>
   <input type="number" id="tonnage" step="0.01" min="0" placeholder="-- Enter your value --"/>
 </div>
-
 <div class="form-row">
   <label for="delivery">Delivery</label>
   <select id="delivery">
@@ -34,7 +30,6 @@
     <option value="Deld">Deld</option>
   </select>
 </div>
-
 <div class="form-row">
   <label for="mixingLocation">Mixing Location</label>
   <select id="mixingLocation">
@@ -47,7 +42,6 @@
     <option value="WIV">WIV</option>
   </select>
 </div>
-
 <div class="form-section">
   <h3>Nutrient Table</h3>
   <table id="nutrientTable">
@@ -90,7 +84,6 @@
     <button type="button" id="solve-btn">Solve</button>
   </div>
 </div>
-
 <div class="form-section">
   <h3>Materials Table</h3>
   <table id="materialTable">
@@ -105,75 +98,62 @@
     </thead>
     <tbody id="materialTableBody"></tbody>
   </table>
-
   <p><strong>Total Input Ratio:</strong> <span id="totalRatio">0</span> kg</p>
-
   <div class="button-group">
     <button type="button" id="add-btn">Add</button>
   </div>
 </div>
-
 <div class="form-section">
   <h3>Price Table</h3>
   <div class="form-row">
     <label for="sellingPrice">Selling Price (RM/MT)</label>
     <input type="number" id="sellingPrice" step="0.01" min="0" placeholder="-- Enter your value --"/>
   </div>
-
   <div class="form-row">
     <label for="materialCost">Material Cost (RM/MT)</label>
     <input type="text" id="materialCost" readonly/>
     <em style="color: red;">Fixed Value</em>
   </div>
-
   <div class="form-row">
     <label for="mixingCost">Mixing (RM/MT)</label>
     <input type="text" id="mixingCost" readonly/>
     <em style="color: red;">Fixed Value</em>
   </div>
-
   <div class="form-row">
     <label>Transport In (RM/MT)</label>
     <input type="text" id="transportIn" value="30.00" readonly/>
     <em style="color: red;">Fixed Value</em>
   </div>
-
   <div class="form-row">
     <label for="bagCost">Bag (RM/MT)</label>
     <input type="text" id="bagCost" readonly/>
     <em style="color: red;">Fixed Value</em>
   </div>
-
   <div class="form-row">
     <label for="transportOut">Transport Out (RM/MT)</label>
     <input type="text" id="transportOut" readonly/>
     <em style="color: red;">Fixed Value</em>
   </div>
-
   <div class="form-row">
     <label for="commission">Commission (RM/MT)</label>
     <input type="number" id="commission" step="0.01" min="0" placeholder="-- Enter your value --"/>
   </div>
-
   <div class="form-row">
     <label for="totalCost">Total Cost (RM/MT)</label>
     <input type="text" id="totalCost" readonly/>
     <em style="color: red;">Fixed Value</em>
   </div>
-
   <div class="form-row">
     <label for="grossProfit">Gross Profit (RM)</label>
     <input type="text" id="grossProfit" readonly/>
     <em style="color: red;">Fixed Value</em>
   </div>
-
   <div class="form-row">
     <label for="gpMargin">GP Margin (%)</label>
     <input type="text" id="gpMargin" readonly/>
     <em style="color: red;">Fixed Value</em>
   </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 <script src="app.js"></script>
 </body>
