@@ -83,7 +83,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           window.materialPrices[row.Material] = parseFloat(row['Material Price']) || 0;
         }
       });
-
       Object.keys(window.items).forEach(itemName => {
         if (window.items[itemName].materials.length === 0) {
           console.warn(`Item ${itemName} has no materials defined`);
@@ -558,8 +557,5 @@ document.addEventListener('DOMContentLoaded', async () => {
       alert('Error initializing app. Please check the Google Sheets data and try again.');
     }
   }
-  // Start the app
   initializeApp();
-
 });
-
